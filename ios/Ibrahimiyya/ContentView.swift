@@ -12,26 +12,31 @@ struct ContentView: View {
     @State private var flash = false
 
     var body: some View {
-        // الخلفية تُمرَّر عبر .background لا داخل ZStack:
-        // ابنٌ يتجاوز المنطقة الآمنة داخل ZStack يوسّع حدود التخطيط كلها،
-        // فينزلق المحتوى تحت شريط الحالة و Dynamic Island.
-        VStack(spacing: 14) {
-            titleCard
-            hadithCard
-            dhikrCircle
-            hintText
-            progressBar
-            counterCard
-            actionButtons
-            Spacer(minLength: 0)
-            footer
-            GatedAdBanner(counter: counter, store: store)
+        // التخطيط يُحسب من الارتفاع المتاح فعلاً.
+        // المقاسات الثابتة كانت تجعل المحتوى أطول من الشاشة فينسكب
+        // من أعلى وأسفل، فيختفي العنوان خلف Dynamic Island ويُقطع آخر زر.
+        GeometryReader { geo in
+            let h = geo.size.height
+            let gap = max(8, min(14, h * 0.016))
+
+            VStack(spacing: gap) {
+                titleCard
+                hadithCard
+                dhikrCircle(size: circleSize(width: geo.size.width, height: h))
+                hintText
+                progressBar
+                counterCard
+                actionButtons
+                Spacer(minLength: 0)
+                footer
+                GatedAdBanner(counter: counter, store: store)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+            .frame(maxWidth: 520)
+            .frame(width: geo.size.width, height: h)
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 8)
-        .frame(maxWidth: 520)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.background)
+        .background(Theme.background, ignoresSafeAreaEdges: .all)
         .environment(\.layoutDirection, .rightToLeft)
         .preferredColorScheme(.dark)
         .animation(.easeInOut(duration: 0.25), value: counter.progress)
@@ -98,7 +103,7 @@ struct ContentView: View {
 
     // MARK: - دائرة الذكر
 
-    private var dhikrCircle: some View {
+    private func dhikrCircle(size: CGFloat) -> some View {
         Button {
             counter.tap()
             flash = true
@@ -110,8 +115,8 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
                 .lineSpacing(6)
                 .minimumScaleFactor(0.6)
-                .padding(26)
-                .frame(width: circleSize, height: circleSize)
+                .padding(size * 0.1)
+                .frame(width: size, height: size)
                 .background(
                     Circle()
                         .fill(
@@ -119,20 +124,22 @@ struct ContentView: View {
                                 colors: [Color(white: 1.0), Theme.cream],
                                 center: UnitPoint(x: 0.5, y: 0.35),
                                 startRadius: 0,
-                                endRadius: circleSize * 0.7
+                                endRadius: size * 0.7
                             )
                         )
                 )
                 .overlay(Circle().stroke(Theme.gold, lineWidth: 5))
                 .shadow(color: Theme.gold.opacity(flash ? 0.75 : 0.35), radius: flash ? 34 : 18)
+                .font(.system(size: max(15, size * 0.072), weight: .bold))
         }
         .buttonStyle(PressableButtonStyle(scale: 0.955))
         .accessibilityLabel("اضغط للذكر والانتقال إلى العبارة التالية")
         .accessibilityValue("عدد الصلوات \(counter.count)")
     }
 
-    private var circleSize: CGFloat {
-        min(UIScreen.main.bounds.width * 0.74, 300)
+    /// الدائرة محدودة بالعرض **والارتفاع** معاً، فلا تدفع بقية العناصر خارج الشاشة
+    private func circleSize(width: CGFloat, height: CGFloat) -> CGFloat {
+        min(width * 0.70, height * 0.30, 300)
     }
 
     private var hintText: some View {
@@ -221,8 +228,11 @@ struct ContentView: View {
 
     private var footer: some View {
         Text("اللهم صلِّ وسلّم على نبينا محمد")
-            .font(.system(size: 14))
+            .font(.system(size: 13))
             .foregroundStyle(Theme.goldSoft.opacity(0.75))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .layoutPriority(-1)   // أول ما يتقلّص عند ضيق الارتفاع
     }
 }
 

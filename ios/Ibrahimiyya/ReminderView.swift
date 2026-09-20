@@ -66,7 +66,7 @@ struct ReminderView: View {
         .padding(.horizontal, 24)
         .frame(maxWidth: 480)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Theme.background)
+        .background(Theme.background, ignoresSafeAreaEdges: .all)
         .environment(\.layoutDirection, .rightToLeft)
         .preferredColorScheme(.dark)
     }

@@ -18,15 +18,17 @@ enum Theme {
     static let slate     = Color(red: 0.353, green: 0.373, blue: 0.420)
     static let slateDark = Color(red: 0.239, green: 0.259, blue: 0.298)
 
-    /// خلفية متدرّجة دائرية كما في نسخة الويب
-    static var background: some View {
+    /// خلفية متدرّجة دائرية كما في نسخة الويب.
+    /// RadialGradient نمطُ شكل (ShapeStyle)، فيصحّ تمريره إلى
+    /// ‎.background(_:ignoresSafeAreaEdges:)‎ لتتجاوز الخلفيةُ وحدَها
+    /// المنطقةَ الآمنة بينما يبقى المحتوى داخلها.
+    static var background: RadialGradient {
         RadialGradient(
             gradient: Gradient(colors: [bg2, bg1, bg3]),
             center: UnitPoint(x: 0.5, y: 0.12),
             startRadius: 0,
             endRadius: 760
         )
-        .ignoresSafeArea()
     }
 }
 
