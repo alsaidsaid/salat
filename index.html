@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#3b0d1c">
+<meta name="description" content="عدّاد الصلاة الإبراهيمية على النبي صلى الله عليه وسلم">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<title>الصلاة الإبراهيمية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#4a1024;
+    --bg-2:#6b1630;
+    --bg-3:#2a0a16;
+    --panel:#3d0f1e;
+    --panel-2:#4a1326;
+    --gold:#e8b53a;
+    --gold-soft:#f5d98a;
+    --cream:#f7f3d8;
+    --green:#1e7a3c;
+    --green-2:#14612e;
+    --red:#d32222;
+    --red-2:#a81818;
+    --blue:#1668d8;
+    --blue-2:#0f4fa8;
+    --text:#ffffff;
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  html,body{height:100%}
+
+  body{
+    margin:0;
+    font-family:'Cairo','Amiri','Segoe UI',Tahoma,sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at 50% 12%, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-3) 100%);
+    background-attachment:fixed;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:14px 16px calc(18px + env(safe-area-inset-bottom));
+    overflow-x:hidden;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+
+  /* الإطار الذهبي المزخرف حول الشاشة */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:6px;
+    border:2px solid rgba(232,181,58,.45);
+    border-radius:26px;
+    pointer-events:none;
+    box-shadow:inset 0 0 40px rgba(0,0,0,.35);
+    z-index:0;
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:520px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    flex:1;
+  }
+
+  /* ===== الترويسة ===== */
+  header.title-card{
+    background:linear-gradient(180deg, rgba(74,19,38,.95), rgba(43,10,22,.95));
+    border:2px solid var(--gold);
+    border-radius:22px;
+    padding:14px 16px 10px;
+    text-align:center;
+    box-shadow:0 6px 22px rgba(0,0,0,.35);
+  }
+  header.title-card h1{
+    margin:0;
+    font-size:clamp(22px,6.4vw,30px);
+    font-weight:900;
+    color:var(--gold);
+    letter-spacing:.5px;
+    text-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .sallallahu{
+    margin-top:4px;
+    font-family:'Amiri',serif;
+    font-size:clamp(15px,4vw,19px);
+    color:var(--gold-soft);
+    opacity:.95;
+  }
+
+  /* ===== الحديث ===== */
+  .hadith{
+    background:rgba(0,0,0,.28);
+    border:1px solid rgba(232,181,58,.35);
+    border-radius:16px;
+    padding:12px 14px;
+    text-align:center;
+    font-family:'Amiri',serif;
+    font-size:clamp(15px,4.2vw,19px);
+    line-height:1.85;
+    color:#f3e7d4;
+  }
+  .hadith .rawi{
+    display:block;
+    margin-top:4px;
+    font-size:.85em;
+    color:var(--gold-soft);
+  }
+
+  /* ===== دائرة الذكر ===== */
+  .circle-area{
+    display:flex;
+    justify-content:center;
+    padding:4px 0 0;
+  }
+  #tapCircle{
+    -webkit-appearance:none;
+    appearance:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    width:min(74vw,300px);
+    height:min(74vw,300px);
+    padding:26px;
+    border-radius:50%;
+    border:5px solid var(--gold);
+    background:radial-gradient(circle at 50% 35%, #fffdf0 0%, var(--cream) 70%, #ece5c0 100%);
+    color:#1c1208;
+    font-family:'Cairo','Amiri',serif;
+    font-weight:700;
+    font-size:clamp(17px,4.9vw,22px);
+    line-height:1.95;
+    cursor:pointer;
+    box-shadow:0 0 0 6px rgba(232,181,58,.18), 0 0 38px rgba(232,181,58,.35), 0 10px 26px rgba(0,0,0,.4);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  #tapCircle:active{
+    transform:scale(.955);
+    box-shadow:0 0 0 10px rgba(232,181,58,.28), 0 0 52px rgba(232,181,58,.55), 0 6px 16px rgba(0,0,0,.45);
+  }
+  #tapCircle.flash{animation:flash .32s ease}
+  @keyframes flash{
+    0%{box-shadow:0 0 0 6px rgba(232,181,58,.18), 0 0 38px rgba(232,181,58,.35)}
+    45%{box-shadow:0 0 0 16px rgba(232,181,58,.42), 0 0 70px rgba(255,220,120,.8)}
+    100%{box-shadow:0 0 0 6px rgba(232,181,58,.18), 0 0 38px rgba(232,181,58,.35)}
+  }
+  #dhikrText{display:block;max-width:100%}
+
+  .hint{
+    text-align:center;
+    font-size:13px;
+    color:rgba(255,255,255,.62);
+    margin-top:-4px;
+  }
+
+  /* ===== شريط التقدّم (الصلاة = صلّ + بارك) ===== */
+  .bar{
+    height:9px;
+    border-radius:99px;
+    background:rgba(255,255,255,.14);
+    overflow:hidden;
+    box-shadow:inset 0 1px 3px rgba(0,0,0,.4);
+  }
+  .bar > span{
+    display:block;
+    height:100%;
+    width:0%;
+    border-radius:99px;
+    background:linear-gradient(90deg,var(--gold-soft),var(--gold));
+    transition:width .25s ease;
+  }
+
+  /* ===== العدّاد ===== */
+  .counters{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+  }
+  .counter{
+    flex:1 1 0;
+    max-width:230px;
+    background:linear-gradient(180deg,var(--green),var(--green-2));
+    border:3px solid var(--gold);
+    border-radius:22px;
+    padding:12px 10px;
+    text-align:center;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  .counter .label{font-size:15px;font-weight:600;opacity:.95}
+  .counter .value{
+    font-size:clamp(28px,9vw,40px);
+    font-weight:900;
+    color:var(--gold);
+    line-height:1.25;
+    font-variant-numeric:tabular-nums;
+  }
+  .counter.today{
+    background:linear-gradient(180deg,#4a1326,#350d1c);
+  }
+  .counter.today .value{color:var(--gold-soft)}
+
+  /* ===== الأزرار ===== */
+  .actions{display:flex;flex-direction:column;gap:10px;margin-top:2px}
+  .btn{
+    -webkit-appearance:none;
+    appearance:none;
+    border:none;
+    border-radius:16px;
+    padding:14px 16px;
+    font-family:inherit;
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 5px 14px rgba(0,0,0,.32);
+    transition:transform .1s ease, filter .15s ease;
+  }
+  .btn:active{transform:translateY(2px);filter:brightness(.92)}
+  .btn.reset{background:linear-gradient(180deg,var(--red),var(--red-2))}
+  .btn.sound{background:linear-gradient(180deg,var(--blue),var(--blue-2))}
+  .btn.sound.off{background:linear-gradient(180deg,#5a5f6b,#3d424c)}
+
+  footer{
+    text-align:center;
+    font-family:'Amiri',serif;
+    font-size:14px;
+    color:rgba(245,217,138,.75);
+    padding:2px 0 4px;
+  }
+
+  /* رسالة التأكيد */
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:26px;
+    transform:translate(-50%,24px);
+    background:rgba(0,0,0,.85);
+    border:1px solid rgba(232,181,58,.5);
+    color:var(--gold-soft);
+    padding:10px 18px;
+    border-radius:99px;
+    font-size:15px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:5;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media (max-height:700px){
+    .hadith{font-size:14px;line-height:1.7;padding:9px 12px}
+    #tapCircle{width:min(62vw,250px);height:min(62vw,250px);padding:20px;line-height:1.8}
+    .btn{padding:11px 14px;font-size:16px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="title-card">
+    <h1>الصلاة الإبراهيمية</h1>
+    <div class="sallallahu">ﷺ</div>
+  </header>
+
+  <div class="hadith">
+    «مَن صلّى عليَّ صلاةً واحدةً صلّى اللهُ عليه بها عشرًا»
+    <span class="rawi">(رواه مسلم)</span>
+  </div>
+
+  <div class="circle-area">
+    <button id="tapCircle" type="button" aria-live="polite" aria-label="اضغط للتسبيح والانتقال إلى العبارة التالية">
+      <span id="dhikrText"></span>
+    </button>
+  </div>
+
+  <div class="hint">اضغط على الدائرة — كل ضغطة تُحتسب صلاة وتنتقل للعبارة التالية</div>
+
+  <div class="bar"><span id="barFill"></span></div>
+
+  <div class="counters">
+    <div class="counter">
+      <div class="label">عدد الصلوات</div>
+      <div class="value" id="countValue">0</div>
+    </div>
+    <div class="counter today">
+      <div class="label">اليوم</div>
+      <div class="value" id="todayValue">0</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn reset" id="resetBtn" type="button"><span dir="ltr">↻</span> إعادة الضبط</button>
+    <button class="btn sound" id="soundBtn" type="button"><span dir="ltr">♪</span> إيقاف الصوت</button>
+  </div>
+
+  <footer>اللهم صلِّ وسلّم على نبينا محمد</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  // العبارتان بالترتيب: الصلاة ثم البركة
+  var PHRASES = [
+    'اللهم صلِّ على محمد وعلى آل محمد كما صليت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد',
+    'اللهم بارك على محمد وعلى آل محمد كما باركت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد'
+  ];
+
+  var KEY_COUNT = 'ibrahimiyya.count';
+  var KEY_INDEX = 'ibrahimiyya.index';
+  var KEY_SOUND = 'ibrahimiyya.sound';
+  var KEY_TODAY = 'ibrahimiyya.today';
+  var KEY_DAY   = 'ibrahimiyya.day';
+
+  var el = {
+    circle: document.getElementById('tapCircle'),
+    text:   document.getElementById('dhikrText'),
+    count:  document.getElementById('countValue'),
+    today:  document.getElementById('todayValue'),
+    bar:    document.getElementById('barFill'),
+    reset:  document.getElementById('resetBtn'),
+    sound:  document.getElementById('soundBtn'),
+    toast:  document.getElementById('toast')
+  };
+
+  function load(key, fallback){
+    try{
+      var v = localStorage.getItem(key);
+      return v === null ? fallback : v;
+    }catch(e){ return fallback; }
+  }
+  function save(key, value){
+    try{ localStorage.setItem(key, value); }catch(e){}
+  }
+
+  function todayKey(){
+    var d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+  }
+
+  var count = parseInt(load(KEY_COUNT, '0'), 10) || 0;
+  var index = parseInt(load(KEY_INDEX, '0'), 10) || 0;
+  if(index !== 0 && index !== 1) index = 0;
+  var soundOn = load(KEY_SOUND, '1') === '1';
+
+  // عدّاد اليوم يُصفَّر مع بداية يوم جديد
+  var today = parseInt(load(KEY_TODAY, '0'), 10) || 0;
+  if(load(KEY_DAY, '') !== todayKey()){
+    today = 0;
+    save(KEY_DAY, todayKey());
+    save(KEY_TODAY, '0');
+  }
+
+  /* ===== الصوت ===== */
+  var audioCtx = null;
+  function beep(){
+    if(!soundOn) return;
+    try{
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return;
+      if(!audioCtx) audioCtx = new Ctx();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      var now = audioCtx.currentTime;
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      // نغمة أعلى قليلاً عند إتمام الصلاة والبركة معاً
+      osc.frequency.setValueAtTime(index === 0 ? 880 : 660, now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.22, now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.2);
+    }catch(e){}
+  }
+
+  function vibrate(ms){
+    try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){}
+  }
+
+  var toastTimer = null;
+  function toast(msg){
+    el.toast.textContent = msg;
+    el.toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.toast.classList.remove('show'); }, 1700);
+  }
+
+  function render(){
+    el.text.textContent = PHRASES[index];
+    el.count.textContent = count.toLocaleString('en-US');
+    el.today.textContent = today.toLocaleString('en-US');
+    // الشريط يمتلئ بعد "اللهم صلِّ" ويكتمل بـ"اللهم بارك"
+    el.bar.style.width = (index === 1 ? 50 : (count > 0 ? 100 : 0)) + '%';
+    el.sound.innerHTML = '<span dir="ltr">♪</span> ' + (soundOn ? 'إيقاف الصوت' : 'تشغيل الصوت');
+    el.sound.classList.toggle('off', !soundOn);
+  }
+
+  function tap(){
+    count += 1;
+    today += 1;
+    beep();
+    vibrate(index === 1 ? [18, 40, 18] : 20);
+
+    index = (index + 1) % PHRASES.length;   // كل ضغطة تنتقل للعبارة التالية
+
+    save(KEY_COUNT, String(count));
+    save(KEY_INDEX, String(index));
+    save(KEY_TODAY, String(today));
+    save(KEY_DAY, todayKey());
+
+    el.circle.classList.remove('flash');
+    void el.circle.offsetWidth;
+    el.circle.classList.add('flash');
+
+    render();
+
+    if(count % 100 === 0) toast('ما شاء الله — ' + count.toLocaleString('en-US') + ' صلاة');
+  }
+
+  // ضغطة واحدة لكل لمسة (منع الاحتساب المزدوج على الجوال)
+  var lastTouch = 0;
+  el.circle.addEventListener('touchstart', function(e){
+    lastTouch = Date.now();
+    e.preventDefault();
+    tap();
+  }, {passive:false});
+  el.circle.addEventListener('click', function(){
+    if(Date.now() - lastTouch < 700) return;
+    tap();
+  });
+  el.circle.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+
+  // مسافة / Enter للتسبيح على الحاسوب
+  document.addEventListener('keydown', function(e){
+    if(e.code === 'Space' || e.key === 'Enter'){
+      if(document.activeElement === el.reset || document.activeElement === el.sound) return;
+      e.preventDefault();
+      tap();
+    }
+  });
+
+  el.reset.addEventListener('click', function(){
+    if(count === 0){ toast('العدّاد صفر بالفعل'); return; }
+    if(!confirm('هل تريد إعادة ضبط العدّاد؟')) return;
+    count = 0; index = 0; today = 0;
+    save(KEY_COUNT,'0'); save(KEY_INDEX,'0'); save(KEY_TODAY,'0');
+    vibrate(35);
+    render();
+    toast('تمت إعادة الضبط');
+  });
+
+  el.sound.addEventListener('click', function(){
+    soundOn = !soundOn;
+    save(KEY_SOUND, soundOn ? '1' : '0');
+    render();
+    if(soundOn) beep();
+  });
+
+  // إبقاء الشاشة مضاءة أثناء الذكر (حيثما يتوفر)
+  var wakeLock = null;
+  async function requestWakeLock(){
+    try{
+      if('wakeLock' in navigator && document.visibilityState === 'visible'){
+        wakeLock = await navigator.wakeLock.request('screen');
+      }
+    }catch(e){}
+  }
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible') requestWakeLock();
+  });
+  el.circle.addEventListener('click', requestWakeLock, {once:true});
+
+  render();
+
+  if('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

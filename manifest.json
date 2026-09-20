@@ -1,0 +1,16 @@
+{
+  "name": "الصلاة الإبراهيمية",
+  "short_name": "الإبراهيمية",
+  "description": "عدّاد الصلاة الإبراهيمية على النبي صلى الله عليه وسلم",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#3b0d1c",
+  "theme_color": "#3b0d1c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
