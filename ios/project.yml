@@ -15,10 +15,15 @@ options:
     iOS: "16.0"
   createIntermediateGroups: true
 
-packages:
-  GoogleMobileAds:
-    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
-    from: "12.0.0"
+# الإصدار ١٫٠ بلا إعلانات ولا شراء داخلي.
+# لإعادتهما في تحديث لاحق: أعد هذه الكتلة، واحذف أسماء الملفات من excludes
+# أدناه، وأعد مفاتيح GADApplicationIdentifier و NSUserTrackingUsageDescription
+# و SKAdNetworkItems إلى info.properties.
+#
+# packages:
+#   GoogleMobileAds:
+#     url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+#     from: "12.0.0"
 
 targets:
 
@@ -31,9 +36,11 @@ targets:
         excludes:
           - "Info-additions.plist"
           - "Products.storekit"
+          # مستثناة من الإصدار ١٫٠ — باقية في المستودع للتحديث القادم
+          - "AdBannerView.swift"
+          - "StoreManager.swift"
+          - "PaywallView.swift"
     dependencies:
-      - package: GoogleMobileAds
-        product: GoogleMobileAds
       - target: IbrahimiyyaWidget
         embed: true
     settings:
@@ -55,19 +62,6 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        # معرّف الاختبار الرسمي من Google — يجعل التطبيق يعمل أثناء التطوير.
-        #
-        # ⚠️ لا تتركه فارغاً ولا تضع قيمة وهمية: مكتبة AdMob تُسقط التطبيق
-        #    عند الإقلاع إذا كان هذا المفتاح مفقوداً أو غير صالح.
-        #
-        # 🔴 استبدله بمعرّفك الحقيقي من AdMob قبل الرفع إلى App Store.
-        GADApplicationIdentifier: ca-app-pub-3940256099942544~1458002511
-        NSUserTrackingUsageDescription: >-
-          يُستخدم هذا الإذن لعرض إعلانات أكثر ملاءمة لك.
-          التطبيق لا يجمع أي بيانات عن أذكارك أو عدد صلواتك.
-        # ⚠️ انسخ القائمة الكاملة من وثائق AdMob — تتجاوز ١٠٠ عنصر
-        SKAdNetworkItems:
-          - SKAdNetworkIdentifier: cstr6suwn9.skadnetwork
     entitlements:
       path: Ibrahimiyya/Ibrahimiyya.entitlements
       properties:

@@ -1,5 +1,22 @@
 # نسخة iOS — الرفع إلى App Store
 
+> ## الإصدار ١٫٠ — مجاني بلا إعلانات
+>
+> أُزيلت الإعلانات والشراء الداخلي من هذا الإصدار مؤقتاً، ريثما يستقرّ
+> حساب AdMob. الملفات باقية في المستودع ومستثناة من البناء فقط.
+>
+> **لإعادتهما في الإصدار ١٫١:**
+> 1. في `project.yml`: أزِل التعليق عن كتلة `packages`، وأعد تبعية
+>    `GoogleMobileAds`، واحذف الملفات الثلاثة من `excludes`، وأعد مفاتيح
+>    `GADApplicationIdentifier` و `NSUserTrackingUsageDescription`
+>    و `SKAdNetworkItems` إلى `info.properties`.
+> 2. أعد في `ContentView.swift`: `StoreManager` و `GatedAdBanner`
+>    وزر «إزالة الإعلانات» وشاشة الشراء.
+> 3. أعد تهيئة `MobileAds` وطلب إذن ATT في `IbrahimiyyaApp.swift`.
+>
+> **مكاسب هذا الإصدار:** لا نافذة تتبّع، ولا مكتبات خارجية، ولا اتصال
+> بالشبكة، واستبيان خصوصية من إجابة واحدة — أي أقل احتمال رفض وأسرع مراجعة.
+
 تطبيق **أصلي (Native SwiftUI)** وليس غلافاً لصفحة ويب. هذا الاختيار مقصود، والسبب في القسم التالي.
 
 ---
@@ -123,65 +140,17 @@ File → New → Target → Widget Extension
 
 ثم حدّد `AppGroup.swift` و `Theme.swift` في متصفح الملفات، وفي **File Inspector ← Target Membership** فعّل هدف الـ Widget أيضاً — الملفان يحتاجهما الهدفان معاً.
 
-### ٤. إضافة مكتبة AdMob
-
-```
-File → Add Package Dependencies…
-  https://github.com/googleads/swift-package-manager-google-mobile-ads.git
-```
-
-> راجع **وثائق AdMob الحالية** لأسماء الأصناف: الإصدار ١٢ فما فوق أسقط البادئة `GAD` (أي `BannerView` بدل `GADBannerView`). الكود مكتوب للإصدار ١٢، والتعليق في أعلى `AdBannerView.swift` يوضّح مقابلاتها في الإصدار ١١.
-
-### ٥. إعداد AdMob
-
-1. أنشئ تطبيقاً في [AdMob](https://admob.google.com) واختر iOS.
-2. انسخ **App ID** (`ca-app-pub-…~…`) إلى `GADApplicationIdentifier` في `project.yml`.
-
-   > ⚠️ **هذا المفتاح ليس اختيارياً.** مكتبة AdMob تُسقط التطبيق عند الإقلاع
-   > إذا كان مفقوداً أو غير صالح — لا تحذير، بل انهيار فوري. المشروع يحمل حالياً
-   > معرّف الاختبار الرسمي من Google ليعمل أثناء التطوير، **فاستبدله قبل الرفع**.
-3. أنشئ وحدة إعلان **Banner** وانسخ **Ad Unit ID** (`ca-app-pub-…/…`) إلى `AdConfig.bannerUnitID` داخل فرع `#else` في `AdBannerView.swift`.
-4. انسخ قائمة `SKAdNetworkItems` كاملة من وثائق AdMob إلى Info.plist.
-
-> ⚠️ **لا تضغط على إعلاناتك الحقيقية أبداً** — Google توقف الحسابات بسبب ذلك. فرع `#if DEBUG` يستخدم معرّفات الاختبار تلقائياً أثناء التطوير.
-
-### ٦. إعداد الشراء داخل التطبيق
-
-في **App Store Connect → تطبيقك → In-App Purchases → +**:
-
-| الحقل | القيمة |
-|---|---|
-| النوع | **Non-Consumable** (غير استهلاكي) |
-| Reference Name | Remove Ads (Lifetime) |
-| Product ID | `com.alsaid.ibrahimiyya.removeads` |
-| السعر | **Tier 1** = 0.99$ |
-| Display Name (ar) | نسخة بلا إعلانات |
-| Description (ar) | إزالة جميع الإعلانات نهائياً — دفعة واحدة مدى الحياة |
-
-> **النوع «غير استهلاكي» ضروري.** لو اخترت Consumable فلن يستطيع المستخدم استرجاع شرائه، وهذا سبب رفض مباشر.
-
-المعرّف في `StoreManager.removeAdsProductID` يجب أن يطابق Product ID **حرفياً**.
-
-في Xcode: `Signing & Capabilities → + Capability → In-App Purchase`.
-
-### ٧. الاختبار
-
-**محلياً بلا حساب:** `Product → Scheme → Edit Scheme → Run → Options → StoreKit Configuration → Products.storekit`
-
-**في Sandbox:** أنشئ Sandbox Tester من App Store Connect → Users and Access → Sandbox.
+### ٤. الاختبار
 
 اختبر تحديداً:
-- [ ] الإعلان **لا يظهر** قبل ١٠٠ صلاة
-- [ ] الإعلان يظهر عند الوصول إلى ١٠٠
-- [ ] الشراء يخفي الإعلان فوراً
-- [ ] «استرجاع المشتريات» يعمل بعد حذف التطبيق وإعادة تثبيته
 - [ ] العدّاد: ضغطتان = صلاة واحدة
+- [ ] **لا يظهر أي إعلان ولا زر شراء**
 - [ ] الـ Widget يعرض العدد نفسه ويتحدّث بعد الذكر
 - [ ] التذكير اليومي يصل في وقته، ورفض الإذن يُرجع المفتاح إلى الإيقاف
 
 > الإشعارات المحلية **لا تحتاج** صلاحية Push Notifications ولا خادماً — إذن المستخدم فقط.
 
-### ٨. ما تحتاجه صفحة المتجر
+### ٥. ما تحتاجه صفحة المتجر
 
 > **كل النصوص مكتوبة وجاهزة في [`AppStoreConnect.md`](AppStoreConnect.md)** —
 > الاسم والعنوان الفرعي والوصف والكلمات المفتاحية بالعربية والإنجليزية،
@@ -195,10 +164,10 @@ File → Add Package Dependencies…
 | الأيقونة | 1024×1024، بلا شفافية وبلا زوايا دائرية |
 | سياسة الخصوصية | `https://alsaidsaid.github.io/salat/privacy.html` ✅ جاهزة |
 | شروط الاستخدام | `https://alsaidsaid.github.io/salat/terms.html` ✅ جاهزة |
-| App Privacy | صرّح بـ **Identifiers → Device ID** للإعلانات |
+| App Privacy | **Does your app collect data? → No** |
 | التصنيف العمري | 4+ |
 
-### ٩. الرفع
+### ٦. الرفع
 
 ```
 Xcode → Product → Destination → Any iOS Device

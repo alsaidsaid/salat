@@ -3,11 +3,9 @@ import UIKit
 
 struct ContentView: View {
     @StateObject private var counter = CounterStore()
-    @StateObject private var store = StoreManager()
     @StateObject private var reminder = ReminderManager()
 
     @State private var showResetConfirm = false
-    @State private var showPaywall = false
     @State private var showReminder = false
     @State private var flash = false
 
@@ -29,7 +27,6 @@ struct ContentView: View {
                 actionButtons
                 Spacer(minLength: 0)
                 footer
-                GatedAdBanner(counter: counter, store: store)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 8)
@@ -40,7 +37,6 @@ struct ContentView: View {
         .environment(\.layoutDirection, .rightToLeft)
         .preferredColorScheme(.dark)
         .animation(.easeInOut(duration: 0.25), value: counter.progress)
-        .animation(.easeInOut(duration: 0.25), value: store.hasRemovedAds)
         .confirmationDialog(
             "هل تريد إعادة ضبط العدّاد؟",
             isPresented: $showResetConfirm,
@@ -50,9 +46,6 @@ struct ContentView: View {
             Button("إلغاء", role: .cancel) {}
         } message: {
             Text("سيعود عدد الصلوات إلى الصفر")
-        }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView(store: store)
         }
         .sheet(isPresented: $showReminder) {
             ReminderView(reminder: reminder)
@@ -212,17 +205,6 @@ struct ContentView: View {
                                   : [Theme.slate, Theme.slateDark])
             }
             .buttonStyle(PressableButtonStyle())
-
-            // يظهر فقط لمن لم يشترِ بعد
-            if !store.hasRemovedAds {
-                Button { showPaywall = true } label: {
-                    Label("إزالة الإعلانات — \(store.displayPrice) مرة واحدة",
-                          systemImage: "sparkles")
-                        .filledButton(colors: [Theme.gold, Color(red: 0.72, green: 0.53, blue: 0.13)],
-                                      foreground: Theme.ink)
-                }
-                .buttonStyle(PressableButtonStyle())
-            }
         }
     }
 

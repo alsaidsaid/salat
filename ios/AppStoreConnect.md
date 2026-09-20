@@ -26,7 +26,7 @@
 
 **النص الترويجي** (١٧٠ حرفاً — يمكن تعديله بلا مراجعة جديدة)
 ```
-عدّاد بسيط للصلاة الإبراهيمية على النبي ﷺ. اضغط لتنتقل بين «اللهم صلِّ» و«اللهم بارك»، وكل ضغطتين تُحتسبان صلاة واحدة. يعمل بلا إنترنت.
+عدّاد بسيط للصلاة الإبراهيمية على النبي ﷺ. اضغط لتنتقل بين «اللهم صلِّ» و«اللهم بارك»، وكل ضغطتين تُحتسبان صلاة واحدة. مجاني بلا إعلانات.
 ```
 
 **الوصف** (٤٠٠٠ حرف)
@@ -60,11 +60,9 @@
 
 لا يطلب التطبيق تسجيل دخول ولا اسماً ولا بريداً. عدد صلواتك محفوظ في جهازك وحده ولا يُرسل إلى أي خادم.
 
-■ الإعلانات
+■ مجاني بالكامل
 
-يعمل التطبيق بلا إعلانات إطلاقاً حتى تُتمّ ١٠٠ صلاة. بعدها يظهر شريط إعلاني صغير أسفل الشاشة فقط — بلا إعلانات تقطع عليك ذكرك.
-
-ويمكنك إزالتها نهائياً بشراء واحد مدى الحياة، بلا اشتراك متجدّد.
+بلا إعلانات، وبلا اشتراكات، وبلا مشتريات داخل التطبيق.
 
 اللهم صلِّ وسلّم على نبينا محمد.
 ```
@@ -90,7 +88,7 @@ salawat,darood,durood,dhikr,tasbih,counter,islamic,muslim,azkar,blessings,sunnah
 
 **Promotional Text**
 ```
-A simple counter for the Ibrahimi salawat. Tap to move between the two phrases — every two taps count as one complete salawat. Works offline.
+A simple counter for the Ibrahimi salawat. Tap to move between the two phrases — every two taps count as one complete salawat. Free, no ads.
 ```
 
 **Description**
@@ -124,18 +122,16 @@ The Ibrahimi salawat is only complete with both phrases together — so every tw
 
 No sign-in, no name, no email. Your count stays on your device and is never sent to any server.
 
-■ ADS
+■ COMPLETELY FREE
 
-Completely ad-free until you complete 100 salawat. After that, a small banner appears at the bottom only — never an ad that interrupts your dhikr.
-
-You can remove ads permanently with a single lifetime purchase. No subscription.
+No ads, no subscriptions, no in-app purchases.
 ```
 
 ---
 
 ## ٣. ملاحظات المراجعة (App Review Information)
 
-**مهم جداً.** بدونها قد يظن المراجع أن الإعلانات معطّلة فيرفض التطبيق.
+**مهم جداً.** بدونها قد يظن المراجع أن العدّاد معطّل — لأنه لا يزيد إلا كل ضغطتين.
 
 ```
 This app is a counter for the Ibrahimi salawat, an Islamic devotional phrase.
@@ -146,15 +142,9 @@ Ibrahimi salawat consists of two phrases ("salli" and "barik") and is only
 complete when both have been recited. Tap 1 switches the phrase and the counter
 stays at 0; tap 2 completes it and the counter becomes 1.
 
-HOW TO TEST THE ADS:
-Ads are intentionally hidden until the user completes 100 salawat. To see the
-banner without 200 taps, tap the circle repeatedly or reinstall — the threshold
-is defined as `adFreeThreshold` in CounterStore.swift.
-
-HOW TO TEST THE IN-APP PURCHASE:
-"Remove Ads" is a non-consumable, one-time purchase (no subscription). Tap the
-gold "إزالة الإعلانات" button on the main screen. A "Restore Purchases" button
-is provided on the purchase screen.
+THIS VERSION HAS NO ADS AND NO IN-APP PURCHASES.
+It is entirely free, contains no third-party SDKs, and makes no network
+requests of any kind.
 
 NO ACCOUNT IS REQUIRED. The app collects no personal data; the count is stored
 only on device.
@@ -169,7 +159,7 @@ only on device.
 | الفئة الأساسية | Reference |
 | الفئة الثانوية | Lifestyle |
 | التصنيف العمري | **4+** |
-| السعر | مجاني، مع شراء داخلي |
+| السعر | **مجاني بالكامل** — بلا مشتريات داخلية |
 | Support URL | `https://github.com/alsaidsaid/salat` |
 | Marketing URL | `https://github.com/alsaidsaid/salat` |
 | Privacy Policy URL | `https://github.com/alsaidsaid/salat/blob/main/PRIVACY.md` |
@@ -186,31 +176,16 @@ only on device.
 
 ## ٥. استبيان الخصوصية (App Privacy)
 
-إجاباتك تعتمد على قرار واحد في AdMob:
-
-### الخيار أ — إعلانات مخصّصة (الافتراضي، عائد أعلى)
+إجابة واحدة لا غير:
 
 | السؤال | الإجابة |
 |---|---|
-| Does your app collect data? | **Yes** |
-| نوع البيانات | Identifiers → **Device ID** |
-| الغرض | **Third-Party Advertising** |
-| Linked to the user's identity? | **No** |
-| Used for tracking? | **Yes** |
+| Does your app collect data? | **No** ✅ |
 
-هذا يلزمك بنافذة إذن التتبّع (ATT) — وهي مُنفَّذة في الكود بالفعل.
+انتهى الاستبيان. لا مُعرّفات، ولا تتبّع، ولا نافذة ATT.
 
-### الخيار ب — إعلانات غير مخصّصة
-
-| السؤال | الإجابة |
-|---|---|
-| Does your app collect data? | **No** |
-
-يلغي نافذة ATT كلياً ويبسّط الاستبيان، لكن **العائد أقل** بوضوح.
-
-> رأيي: لتطبيق ذكر يفتحه المستخدم في لحظة خشوع، نافذة تتبّع في أول تشغيل ليست بداية موفّقة. الخيار (ب) أنظف تجربةً، والفرق في العائد عند هذا الحجم محدود. القرار قرارك — وتفعيله من إعدادات AdMob لا من الكود.
-
-**لا تُصرّح بجمع بيانات الشراء:** عملية الدفع تُدار من Apple بالكامل ولا يصلك منها شيء.
+> التطبيق **لا يحوي أي مكتبة خارجية** ولا يُجري أي اتصال بالشبكة إطلاقاً.
+> عدد الصلوات محفوظ في الجهاز وحده. هذا أنظف وضع ممكن أمام مراجعة Apple.
 
 ---
 
@@ -242,7 +217,7 @@ only on device.
 • عدّاد للصلاة الإبراهيمية: كل ضغطتين تُحتسبان صلاة واحدة
 • تذكير يومي في الوقت الذي تختاره
 • Widget للشاشة الرئيسية وشاشة القفل
-• يعمل بلا إنترنت
+• يعمل بلا إنترنت، مجاني بلا إعلانات
 
 اللهم صلِّ وسلّم على نبينا محمد.
 ```
@@ -254,27 +229,11 @@ First release.
 • Ibrahimi salawat counter — every two taps count as one
 • Daily reminder at a time you choose
 • Home Screen and Lock Screen widgets
-• Works fully offline
+• Works fully offline — free, no ads
 ```
 
 ---
 
-## ٨. منتج الشراء داخل التطبيق
-
-| الحقل | القيمة |
-|---|---|
-| Reference Name | Remove Ads (Lifetime) |
-| Product ID | `com.alsaid.ibrahimiyya.removeads` |
-| النوع | **Non-Consumable** |
-| السعر | Tier 1 — 0.99$ |
-| Display Name (ar) | نسخة بلا إعلانات |
-| Description (ar) | إزالة جميع الإعلانات نهائياً — دفعة واحدة مدى الحياة |
-| Display Name (en) | Ad-Free Version |
-| Description (en) | Remove all ads forever — one-time purchase |
-
-يحتاج المنتج **لقطة شاشة للمراجعة**: صوّر شاشة الشراء من المحاكي وارفعها في حقل Review Screenshot.
-
----
 
 ## ملاحظة أخيرة
 
