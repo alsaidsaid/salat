@@ -191,8 +191,9 @@
     gap:12px;
   }
   .counter{
-    flex:1 1 0;
-    max-width:230px;
+    flex:0 1 auto;
+    min-width:190px;
+    max-width:280px;
     background:linear-gradient(180deg,var(--green),var(--green-2));
     border:3px solid var(--gold);
     border-radius:22px;
@@ -208,10 +209,6 @@
     line-height:1.25;
     font-variant-numeric:tabular-nums;
   }
-  .counter.today{
-    background:linear-gradient(180deg,#4a1326,#350d1c);
-  }
-  .counter.today .value{color:var(--gold-soft)}
 
   /* ===== الأزرار ===== */
   .actions{display:flex;flex-direction:column;gap:10px;margin-top:2px}
@@ -287,7 +284,7 @@
     </button>
   </div>
 
-  <div class="hint">اضغط على الدائرة — كل ضغطة تُحتسب صلاة وتنتقل للعبارة التالية</div>
+  <div class="hint">اضغط على الدائرة — «صلِّ» ثم «بارك» تُحتسبان صلاة واحدة</div>
 
   <div class="bar"><span id="barFill"></span></div>
 
@@ -295,10 +292,6 @@
     <div class="counter">
       <div class="label">عدد الصلوات</div>
       <div class="value" id="countValue">0</div>
-    </div>
-    <div class="counter today">
-      <div class="label">اليوم</div>
-      <div class="value" id="todayValue">0</div>
     </div>
   </div>
 
@@ -325,14 +318,11 @@
   var KEY_COUNT = 'ibrahimiyya.count';
   var KEY_INDEX = 'ibrahimiyya.index';
   var KEY_SOUND = 'ibrahimiyya.sound';
-  var KEY_TODAY = 'ibrahimiyya.today';
-  var KEY_DAY   = 'ibrahimiyya.day';
 
   var el = {
     circle: document.getElementById('tapCircle'),
     text:   document.getElementById('dhikrText'),
     count:  document.getElementById('countValue'),
-    today:  document.getElementById('todayValue'),
     bar:    document.getElementById('barFill'),
     reset:  document.getElementById('resetBtn'),
     sound:  document.getElementById('soundBtn'),
@@ -349,23 +339,10 @@
     try{ localStorage.setItem(key, value); }catch(e){}
   }
 
-  function todayKey(){
-    var d = new Date();
-    return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-  }
-
   var count = parseInt(load(KEY_COUNT, '0'), 10) || 0;
   var index = parseInt(load(KEY_INDEX, '0'), 10) || 0;
   if(index !== 0 && index !== 1) index = 0;
   var soundOn = load(KEY_SOUND, '1') === '1';
-
-  // عدّاد اليوم يُصفَّر مع بداية يوم جديد
-  var today = parseInt(load(KEY_TODAY, '0'), 10) || 0;
-  if(load(KEY_DAY, '') !== todayKey()){
-    today = 0;
-    save(KEY_DAY, todayKey());
-    save(KEY_TODAY, '0');
-  }
 
   /* ===== الصوت ===== */
   var audioCtx = null;
@@ -380,8 +357,8 @@
       var osc = audioCtx.createOscillator();
       var gain = audioCtx.createGain();
       osc.type = 'sine';
-      // نغمة أعلى قليلاً عند إتمام الصلاة والبركة معاً
-      osc.frequency.setValueAtTime(index === 0 ? 880 : 660, now);
+      // نغمة أعلى عند إتمام الصلاة (بعد «بارك»)
+      osc.frequency.setValueAtTime(index === 1 ? 990 : 660, now);
       gain.gain.setValueAtTime(0.0001, now);
       gain.gain.exponentialRampToValueAtTime(0.22, now + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
@@ -406,25 +383,28 @@
   function render(){
     el.text.textContent = PHRASES[index];
     el.count.textContent = count.toLocaleString('en-US');
-    el.today.textContent = today.toLocaleString('en-US');
-    // الشريط يمتلئ بعد "اللهم صلِّ" ويكتمل بـ"اللهم بارك"
-    el.bar.style.width = (index === 1 ? 50 : (count > 0 ? 100 : 0)) + '%';
+    // الشريط: نصف بعد «صلِّ»، ويكتمل عند «بارك» ثم يبدأ من جديد
+    el.bar.style.width = (index === 1 ? 50 : 0) + '%';
     el.sound.innerHTML = '<span dir="ltr">♪</span> ' + (soundOn ? 'إيقاف الصوت' : 'تشغيل الصوت');
     el.sound.classList.toggle('off', !soundOn);
   }
 
+  var barTimer = null;
+
   function tap(){
-    count += 1;
-    today += 1;
+    // الضغطة على «بارك» (index === 1) تُتمّ الصلاة فتُحتسب واحدة
+    var completes = (index === 1);
+
     beep();
-    vibrate(index === 1 ? [18, 40, 18] : 20);
+    vibrate(completes ? [18, 40, 18] : 20);
+
+    if(completes){
+      count += 1;
+      save(KEY_COUNT, String(count));
+    }
 
     index = (index + 1) % PHRASES.length;   // كل ضغطة تنتقل للعبارة التالية
-
-    save(KEY_COUNT, String(count));
     save(KEY_INDEX, String(index));
-    save(KEY_TODAY, String(today));
-    save(KEY_DAY, todayKey());
 
     el.circle.classList.remove('flash');
     void el.circle.offsetWidth;
@@ -432,7 +412,16 @@
 
     render();
 
-    if(count % 100 === 0) toast('ما شاء الله — ' + count.toLocaleString('en-US') + ' صلاة');
+    if(completes){
+      // امتلاء الشريط كاملاً لحظة إتمام الصلاة قبل أن يبدأ من جديد
+      el.bar.style.width = '100%';
+      clearTimeout(barTimer);
+      barTimer = setTimeout(function(){ el.bar.style.width = '0%'; }, 340);
+    }
+
+    if(completes && count % 100 === 0){
+      toast('ما شاء الله — ' + count.toLocaleString('en-US') + ' صلاة');
+    }
   }
 
   // ضغطة واحدة لكل لمسة (منع الاحتساب المزدوج على الجوال)
@@ -460,8 +449,9 @@
   el.reset.addEventListener('click', function(){
     if(count === 0){ toast('العدّاد صفر بالفعل'); return; }
     if(!confirm('هل تريد إعادة ضبط العدّاد؟')) return;
-    count = 0; index = 0; today = 0;
-    save(KEY_COUNT,'0'); save(KEY_INDEX,'0'); save(KEY_TODAY,'0');
+    count = 0; index = 0;
+    save(KEY_COUNT,'0'); save(KEY_INDEX,'0');
+    clearTimeout(barTimer);
     vibrate(35);
     render();
     toast('تمت إعادة الضبط');
