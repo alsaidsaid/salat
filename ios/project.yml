@@ -55,8 +55,13 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        # ⚠️ استبدل هذا بمعرّف تطبيقك من AdMob قبل الرفع
-        GADApplicationIdentifier: ca-app-pub-XXXXXXXXXXXXXXXX~ZZZZZZZZZZ
+        # معرّف الاختبار الرسمي من Google — يجعل التطبيق يعمل أثناء التطوير.
+        #
+        # ⚠️ لا تتركه فارغاً ولا تضع قيمة وهمية: مكتبة AdMob تُسقط التطبيق
+        #    عند الإقلاع إذا كان هذا المفتاح مفقوداً أو غير صالح.
+        #
+        # 🔴 استبدله بمعرّفك الحقيقي من AdMob قبل الرفع إلى App Store.
+        GADApplicationIdentifier: ca-app-pub-3940256099942544~1458002511
         NSUserTrackingUsageDescription: >-
           يُستخدم هذا الإذن لعرض إعلانات أكثر ملاءمة لك.
           التطبيق لا يجمع أي بيانات عن أذكارك أو عدد صلواتك.

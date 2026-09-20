@@ -135,7 +135,11 @@ File → Add Package Dependencies…
 ### ٥. إعداد AdMob
 
 1. أنشئ تطبيقاً في [AdMob](https://admob.google.com) واختر iOS.
-2. انسخ **App ID** (`ca-app-pub-…~…`) إلى `GADApplicationIdentifier` في Info.plist.
+2. انسخ **App ID** (`ca-app-pub-…~…`) إلى `GADApplicationIdentifier` في `project.yml`.
+
+   > ⚠️ **هذا المفتاح ليس اختيارياً.** مكتبة AdMob تُسقط التطبيق عند الإقلاع
+   > إذا كان مفقوداً أو غير صالح — لا تحذير، بل انهيار فوري. المشروع يحمل حالياً
+   > معرّف الاختبار الرسمي من Google ليعمل أثناء التطوير، **فاستبدله قبل الرفع**.
 3. أنشئ وحدة إعلان **Banner** وانسخ **Ad Unit ID** (`ca-app-pub-…/…`) إلى `AdConfig.bannerUnitID` داخل فرع `#else` في `AdBannerView.swift`.
 4. انسخ قائمة `SKAdNetworkItems` كاملة من وثائق AdMob إلى Info.plist.
 
