@@ -1,4 +1,5 @@
 import StoreKit
+import Combine
 
 /// إدارة الشراء داخل التطبيق (StoreKit 2).
 ///
@@ -15,7 +16,9 @@ final class StoreManager: ObservableObject {
     @Published private(set) var isPurchasing = false
     @Published var errorMessage: String?
 
-    private var updatesTask: Task<Void, Never>?
+    // nonisolated(unsafe) لأن deinit غير معزول ولا يستطيع لمس خاصية معزولة بـ @MainActor.
+    // آمن هنا: تُسنَد مرة واحدة في init ولا تُقرأ إلا للإلغاء.
+    private nonisolated(unsafe) var updatesTask: Task<Void, Never>?
 
     init() {
         // الاستماع للمعاملات التي تصل من خارج التطبيق (شراء من جهاز آخر، استرداد، مشاركة عائلية)
