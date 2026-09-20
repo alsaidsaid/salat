@@ -1,0 +1,111 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  مواصفة XcodeGen — تُنشئ مشروع Xcode كاملاً بأمر واحد.
+#  تتولى نيابةً عنك: الهدفين، المجموعة المشتركة، الصلاحيات،
+#  مكتبة AdMob، ومفاتيح Info.plist.
+#
+#      brew install xcodegen
+#      cd ios && xcodegen generate && open Ibrahimiyya.xcodeproj
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Ibrahimiyya
+
+options:
+  bundleIdPrefix: com.alsaid
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+packages:
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    from: "12.0.0"
+
+targets:
+
+  # ── التطبيق ───────────────────────────────────────────────────────────────
+  Ibrahimiyya:
+    type: application
+    platform: iOS
+    sources:
+      - path: Ibrahimiyya
+        excludes:
+          - "Info-additions.plist"
+          - "Products.storekit"
+    dependencies:
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
+      - target: IbrahimiyyaWidget
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.alsaid.ibrahimiyya
+        PRODUCT_NAME: Ibrahimiyya
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"          # iPhone فقط
+        ENABLE_USER_SCRIPT_SANDBOXING: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+    info:
+      path: Ibrahimiyya/Info.plist
+      properties:
+        CFBundleDisplayName: الصلاة الإبراهيمية
+        CFBundleDevelopmentRegion: ar
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        # ⚠️ استبدل هذا بمعرّف تطبيقك من AdMob قبل الرفع
+        GADApplicationIdentifier: ca-app-pub-XXXXXXXXXXXXXXXX~ZZZZZZZZZZ
+        NSUserTrackingUsageDescription: >-
+          يُستخدم هذا الإذن لعرض إعلانات أكثر ملاءمة لك.
+          التطبيق لا يجمع أي بيانات عن أذكارك أو عدد صلواتك.
+        # ⚠️ انسخ القائمة الكاملة من وثائق AdMob — تتجاوز ١٠٠ عنصر
+        SKAdNetworkItems:
+          - SKAdNetworkIdentifier: cstr6suwn9.skadnetwork
+    entitlements:
+      path: Ibrahimiyya/Ibrahimiyya.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.alsaid.ibrahimiyya
+
+  # ── الـ Widget ────────────────────────────────────────────────────────────
+  IbrahimiyyaWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: IbrahimiyyaWidget
+      # الملفان مشتركان بين الهدفين (مقابل Target Membership في Xcode)
+      - path: Ibrahimiyya/AppGroup.swift
+      - path: Ibrahimiyya/Theme.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.alsaid.ibrahimiyya.widget
+        PRODUCT_NAME: IbrahimiyyaWidget
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        SKIP_INSTALL: YES
+    info:
+      path: IbrahimiyyaWidget/Info.plist
+      properties:
+        CFBundleDisplayName: عدد الصلوات
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: IbrahimiyyaWidget/IbrahimiyyaWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.alsaid.ibrahimiyya
+
+schemes:
+  Ibrahimiyya:
+    build:
+      targets:
+        Ibrahimiyya: all
+    run:
+      config: Debug
+      # يتيح اختبار الشراء محلياً بلا حساب ولا Sandbox
+      storeKitConfiguration: Ibrahimiyya/Products.storekit
+    archive:
+      config: Release
