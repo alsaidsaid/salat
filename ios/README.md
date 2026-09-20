@@ -71,7 +71,10 @@ cd salat/ios
 ./setup.sh
 ```
 
-السكربت يثبّت XcodeGen وينشئ `Ibrahimiyya.xcodeproj` كاملاً من `project.yml`،
+**لا يحتاج Homebrew ولا كلمة مرور.** إن لم يجد XcodeGen حمّل النسخة الجاهزة
+من GitHub إلى `ios/.tools/` واستعملها من هناك — كل شيء داخل مجلد المشروع.
+
+السكربت ينشئ `Ibrahimiyya.xcodeproj` كاملاً من `project.yml`،
 **متكفّلاً نيابةً عنك بـ:** الهدفين (التطبيق والـ Widget)، المجموعة المشتركة على
 كليهما بنفس المعرّف، ملفات الصلاحيات، ربط مكتبة AdMob، مفاتيح Info.plist،
 وربط `Products.storekit` بالـ Scheme لاختبار الشراء محلياً.
