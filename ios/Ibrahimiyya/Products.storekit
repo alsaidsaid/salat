@@ -1,0 +1,29 @@
+{
+  "identifier" : "IbrahimiyyaProducts",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "removeads",
+      "localizations" : [
+        {
+          "description" : "إزالة جميع الإعلانات نهائياً — دفعة واحدة مدى الحياة",
+          "displayName" : "نسخة بلا إعلانات",
+          "locale" : "ar"
+        },
+        {
+          "description" : "Remove all ads forever — one-time purchase",
+          "displayName" : "Ad-Free Version",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.alsaid.ibrahimiyya.removeads",
+      "referenceName" : "Remove Ads (Lifetime)",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {},
+  "subscriptionGroups" : [],
+  "version" : { "major" : 3, "minor" : 0 }
+}
