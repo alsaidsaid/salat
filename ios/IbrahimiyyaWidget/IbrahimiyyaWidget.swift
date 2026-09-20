@@ -42,7 +42,7 @@ struct IbrahimiyyaWidgetEntryView: View {
         case .accessoryCircular:
             lockScreenCircular
         case .accessoryInline:
-            Text("الصلوات: \(entry.count)")
+            Text("الصلوات: " + entry.count.salawatFormatted)
         default:
             homeScreen
         }
@@ -54,7 +54,7 @@ struct IbrahimiyyaWidgetEntryView: View {
                 .font(.system(size: family == .systemSmall ? 18 : 22))
                 .foregroundStyle(Theme.goldSoft)
 
-            Text("\(entry.count)")
+            Text(entry.count.salawatFormatted)
                 .font(.system(size: family == .systemSmall ? 40 : 52, weight: .black).monospacedDigit())
                 .foregroundStyle(Theme.gold)
                 .minimumScaleFactor(0.5)
@@ -77,7 +77,7 @@ struct IbrahimiyyaWidgetEntryView: View {
     private var lockScreenCircular: some View {
         VStack(spacing: 0) {
             Text("ﷺ").font(.system(size: 11))
-            Text("\(entry.count)")
+            Text(entry.count.salawatFormatted)
                 .font(.system(size: 16, weight: .bold).monospacedDigit())
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)

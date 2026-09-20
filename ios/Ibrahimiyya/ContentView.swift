@@ -163,7 +163,7 @@ struct ContentView: View {
             Text("عدد الصلوات")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.white)
-            Text("\(counter.count)")
+            Text(counter.count.salawatFormatted)
                 .font(.system(size: 38, weight: .black).monospacedDigit())
                 .foregroundStyle(Theme.gold)
         }

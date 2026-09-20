@@ -32,6 +32,15 @@ enum Theme {
     }
 }
 
+extension Int {
+    /// الأرقام لاتينية دائماً ومستقلة عن لغة الجهاز.
+    /// الأرقام العربية-الهندية تُرسم بها بعض الخطوط رموزاً بديلة
+    /// (ظهر الصفر ◆ في وزن black)، والنسخة الإلكترونية تستعمل اللاتينية أيضاً.
+    var salawatFormatted: String {
+        formatted(.number.locale(Locale(identifier: "en_US_POSIX")))
+    }
+}
+
 /// زر بتأثير ضغط خفيف
 struct PressableButtonStyle: ButtonStyle {
     var scale: CGFloat = 0.97
