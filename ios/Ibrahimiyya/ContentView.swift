@@ -3,9 +3,11 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var counter = CounterStore()
     @StateObject private var store = StoreManager()
+    @StateObject private var reminder = ReminderManager()
 
     @State private var showResetConfirm = false
     @State private var showPaywall = false
+    @State private var showReminder = false
     @State private var flash = false
 
     var body: some View {
@@ -44,6 +46,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView(store: store)
+        }
+        .sheet(isPresented: $showReminder) {
+            ReminderView(reminder: reminder)
         }
     }
 
@@ -186,6 +191,15 @@ struct ContentView: View {
                       systemImage: counter.soundOn ? "speaker.wave.2.fill" : "speaker.slash.fill")
                     .filledButton(colors: counter.soundOn
                                   ? [Theme.blue, Theme.blueDark]
+                                  : [Theme.slate, Theme.slateDark])
+            }
+            .buttonStyle(PressableButtonStyle())
+
+            Button { showReminder = true } label: {
+                Label(reminder.isEnabled ? "التذكير اليومي مفعّل" : "تذكير يومي",
+                      systemImage: reminder.isEnabled ? "bell.fill" : "bell")
+                    .filledButton(colors: reminder.isEnabled
+                                  ? [Theme.green, Theme.greenDark]
                                   : [Theme.slate, Theme.slateDark])
             }
             .buttonStyle(PressableButtonStyle())

@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import AudioToolbox
+import WidgetKit
 
 /// منطق العدّ والتخزين.
 ///
@@ -27,13 +28,9 @@ final class CounterStore: ObservableObject {
 
     private let defaults: UserDefaults
 
-    private enum Keys {
-        static let count = "ibrahimiyya.count"
-        static let index = "ibrahimiyya.index"
-        static let sound = "ibrahimiyya.sound"
-    }
+    private typealias Keys = AppGroup.Keys
 
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = AppGroup.defaults) {
         self.defaults = defaults
         self.count = defaults.integer(forKey: Keys.count)
         let storedIndex = defaults.integer(forKey: Keys.index)
@@ -70,6 +67,7 @@ final class CounterStore: ObservableObject {
         if completes {
             count += 1
             defaults.set(count, forKey: Keys.count)
+            reloadWidget()
         }
 
         index = (index + 1) % Self.phrases.count
@@ -90,7 +88,13 @@ final class CounterStore: ObservableObject {
         justCompleted = false
         defaults.set(0, forKey: Keys.count)
         defaults.set(0, forKey: Keys.index)
+        reloadWidget()
         UINotificationFeedbackGenerator().notificationOccurred(.success)
+    }
+
+    /// يطلب من النظام إعادة رسم الـ Widget بالعدد الجديد
+    private func reloadWidget() {
+        WidgetCenter.shared.reloadTimelines(ofKind: AppGroup.widgetKind)
     }
 
     // MARK: - الصوت والاهتزاز

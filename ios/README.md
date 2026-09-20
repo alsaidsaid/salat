@@ -10,17 +10,18 @@
 
 لذلك كُتب التطبيق بـ SwiftUI أصلاً — لا WebView — وهذا يرفع فرص القبول كثيراً لكنه **لا يضمنها**.
 
-### ما يُنصح بإضافته قبل الرفع لتقليل خطر الرفض
+### ما أُضيف بالفعل لتقليل خطر الرفض
 
-| الإضافة | الأثر |
-|---|---|
-| **Widget** على الشاشة الرئيسية يعرض عدد الصلوات | الأقوى أثراً — وظيفة يستحيل على موقع ويب تقديمها |
-| **تذكير يومي** عبر الإشعارات المحلية | يضيف قيمة أصلية واضحة |
-| **مزامنة iCloud** للعدّاد بين الأجهزة | يبرّر كون التطبيق أصلياً |
-| **تطبيق Apple Watch** | ممتاز لتطبيقات الذكر تحديداً |
-| أهداف/إحصاءات أسبوعية | يحوّله من «عدّاد» إلى «تطبيق» |
+| الإضافة | الحالة | الأثر |
+|---|---|---|
+| **Widget** للشاشة الرئيسية وشاشة القفل | ✅ مُنفَّذ | الأقوى أثراً — وظيفة يستحيل على موقع ويب تقديمها |
+| **تذكير يومي** عبر الإشعارات المحلية | ✅ مُنفَّذ | قيمة أصلية واضحة |
+| اهتزاز وأصوات النظام | ✅ مُنفَّذ | |
+| **مزامنة iCloud** بين الأجهزة | ◻️ مقترح | يبرّر كون التطبيق أصلياً |
+| **تطبيق Apple Watch** | ◻️ مقترح | ممتاز لتطبيقات الذكر تحديداً |
+| إحصاءات أسبوعية | ◻️ مقترح | يحوّله من «عدّاد» إلى «تطبيق» |
 
-إضافة الـ Widget وحده يغيّر الصورة كثيراً أمام المراجع.
+الـ Widget وحده يغيّر الصورة كثيراً أمام المراجع، ومعه التذكير اليومي يصبح ملف التطبيق مقنعاً.
 
 ---
 
@@ -47,9 +48,13 @@
 | `StoreManager.swift` | الشراء داخل التطبيق (StoreKit 2) |
 | `PaywallView.swift` | شاشة الشراء |
 | `AdBannerView.swift` | الإعلان وشرط ظهوره بعد ١٠٠ صلاة |
+| `ReminderManager.swift` | التذكير اليومي عبر الإشعارات المحلية |
+| `ReminderView.swift` | شاشة ضبط التذكير |
+| `AppGroup.swift` | التخزين المشترك بين التطبيق والـ Widget |
 | `Theme.swift` | الألوان |
 | `Products.storekit` | لاختبار الشراء محلياً بلا حساب |
 | `Info-additions.plist` | المفاتيح المطلوب إضافتها لـ Info.plist |
+| `../IbrahimiyyaWidget/` | هدف الـ Widget |
 
 ---
 
@@ -66,7 +71,31 @@ Xcode → File → New → Project → iOS → App
 
 احذف `ContentView.swift` الافتراضي، ثم اسحب كل ملفات `.swift` من هذا المجلد إلى المشروع مع تفعيل **Copy items if needed**.
 
-### ٢. إضافة مكتبة AdMob
+### ٢. تفعيل المجموعة المشتركة (App Group)
+
+الـ Widget عملية منفصلة لا ترى تخزين التطبيق، والمجموعة هي الجسر بينهما.
+
+```
+الهدف Ibrahimiyya → Signing & Capabilities → + Capability → App Groups
+  أضف:  group.com.alsaid.ibrahimiyya
+```
+
+**كرّر الخطوة نفسها على هدف الـ Widget بنفس المعرّف حرفياً.** بدون ذلك سيعرض الـ Widget صفراً دائماً.
+
+### ٣. إضافة هدف الـ Widget
+
+```
+File → New → Target → Widget Extension
+  Product Name: IbrahimiyyaWidget
+  ✗ أزل علامة "Include Live Activity"
+  ✗ أزل علامة "Include Configuration App Intent"
+```
+
+احذف الملف الذي ينشئه Xcode تلقائياً، وضع مكانه `IbrahimiyyaWidget/IbrahimiyyaWidget.swift`.
+
+ثم حدّد `AppGroup.swift` و `Theme.swift` في متصفح الملفات، وفي **File Inspector ← Target Membership** فعّل هدف الـ Widget أيضاً — الملفان يحتاجهما الهدفان معاً.
+
+### ٤. إضافة مكتبة AdMob
 
 ```
 File → Add Package Dependencies…
@@ -75,7 +104,7 @@ File → Add Package Dependencies…
 
 > راجع **وثائق AdMob الحالية** لأسماء الأصناف: الإصدار ١٢ فما فوق أسقط البادئة `GAD` (أي `BannerView` بدل `GADBannerView`). الكود مكتوب للإصدار ١٢، والتعليق في أعلى `AdBannerView.swift` يوضّح مقابلاتها في الإصدار ١١.
 
-### ٣. إعداد AdMob
+### ٥. إعداد AdMob
 
 1. أنشئ تطبيقاً في [AdMob](https://admob.google.com) واختر iOS.
 2. انسخ **App ID** (`ca-app-pub-…~…`) إلى `GADApplicationIdentifier` في Info.plist.
@@ -84,7 +113,7 @@ File → Add Package Dependencies…
 
 > ⚠️ **لا تضغط على إعلاناتك الحقيقية أبداً** — Google توقف الحسابات بسبب ذلك. فرع `#if DEBUG` يستخدم معرّفات الاختبار تلقائياً أثناء التطوير.
 
-### ٤. إعداد الشراء داخل التطبيق
+### ٦. إعداد الشراء داخل التطبيق
 
 في **App Store Connect → تطبيقك → In-App Purchases → +**:
 
@@ -103,7 +132,7 @@ File → Add Package Dependencies…
 
 في Xcode: `Signing & Capabilities → + Capability → In-App Purchase`.
 
-### ٥. الاختبار
+### ٧. الاختبار
 
 **محلياً بلا حساب:** `Product → Scheme → Edit Scheme → Run → Options → StoreKit Configuration → Products.storekit`
 
@@ -115,8 +144,12 @@ File → Add Package Dependencies…
 - [ ] الشراء يخفي الإعلان فوراً
 - [ ] «استرجاع المشتريات» يعمل بعد حذف التطبيق وإعادة تثبيته
 - [ ] العدّاد: ضغطتان = صلاة واحدة
+- [ ] الـ Widget يعرض العدد نفسه ويتحدّث بعد الذكر
+- [ ] التذكير اليومي يصل في وقته، ورفض الإذن يُرجع المفتاح إلى الإيقاف
 
-### ٦. ما تحتاجه صفحة المتجر
+> الإشعارات المحلية **لا تحتاج** صلاحية Push Notifications ولا خادماً — إذن المستخدم فقط.
+
+### ٨. ما تحتاجه صفحة المتجر
 
 | العنصر | التفاصيل |
 |---|---|
@@ -129,7 +162,7 @@ File → Add Package Dependencies…
 | App Privacy | صرّح بـ **Identifiers → Device ID** للإعلانات |
 | التصنيف العمري | 4+ |
 
-### ٧. الرفع
+### ٩. الرفع
 
 ```
 Xcode → Product → Destination → Any iOS Device
