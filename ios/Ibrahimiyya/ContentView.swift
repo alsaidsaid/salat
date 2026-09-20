@@ -12,25 +12,26 @@ struct ContentView: View {
     @State private var flash = false
 
     var body: some View {
-        ZStack {
-            Theme.background
-
-            VStack(spacing: 14) {
-                titleCard
-                hadithCard
-                dhikrCircle
-                hintText
-                progressBar
-                counterCard
-                actionButtons
-                Spacer(minLength: 0)
-                footer
-                GatedAdBanner(counter: counter, store: store)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 10)
-            .frame(maxWidth: 520)
+        // الخلفية تُمرَّر عبر .background لا داخل ZStack:
+        // ابنٌ يتجاوز المنطقة الآمنة داخل ZStack يوسّع حدود التخطيط كلها،
+        // فينزلق المحتوى تحت شريط الحالة و Dynamic Island.
+        VStack(spacing: 14) {
+            titleCard
+            hadithCard
+            dhikrCircle
+            hintText
+            progressBar
+            counterCard
+            actionButtons
+            Spacer(minLength: 0)
+            footer
+            GatedAdBanner(counter: counter, store: store)
         }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+        .frame(maxWidth: 520)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.background)
         .environment(\.layoutDirection, .rightToLeft)
         .preferredColorScheme(.dark)
         .animation(.easeInOut(duration: 0.25), value: counter.progress)
