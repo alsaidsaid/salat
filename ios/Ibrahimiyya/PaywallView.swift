@@ -75,8 +75,8 @@ struct PaywallView: View {
 
                 // مطلوبان من Apple في أي شاشة شراء
                 HStack(spacing: 16) {
-                    Link("شروط الاستخدام", destination: URL(string: "https://alsaidsaid.github.io/salat/terms.html")!)
-                    Link("سياسة الخصوصية", destination: URL(string: "https://alsaidsaid.github.io/salat/privacy.html")!)
+                    Link("شروط الاستخدام", destination: URL(string: "https://github.com/alsaidsaid/salat/blob/main/TERMS.md")!)
+                    Link("سياسة الخصوصية", destination: URL(string: "https://github.com/alsaidsaid/salat/blob/main/PRIVACY.md")!)
                 }
                 .font(.system(size: 12))
                 .foregroundStyle(Color.white.opacity(0.6))

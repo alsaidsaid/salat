@@ -170,11 +170,17 @@ only on device.
 | الفئة الثانوية | Lifestyle |
 | التصنيف العمري | **4+** |
 | السعر | مجاني، مع شراء داخلي |
-| Support URL | `https://alsaidsaid.github.io/salat/` |
-| Marketing URL | `https://alsaidsaid.github.io/salat/` |
-| Privacy Policy URL | `https://alsaidsaid.github.io/salat/privacy.html` |
+| Support URL | `https://github.com/alsaidsaid/salat` |
+| Marketing URL | `https://github.com/alsaidsaid/salat` |
+| Privacy Policy URL | `https://github.com/alsaidsaid/salat/blob/main/PRIVACY.md` |
 
-> ⚠️ الروابط الثلاثة **لن تعمل** حتى تُفعّل GitHub Pages. وApple ترفض التطبيق إذا لم يفتح رابط سياسة الخصوصية فعلاً — تحقق منه في متصفح خفي قبل التقديم.
+✅ **هذه الروابط تعمل الآن** — المستودع عام، وGitHub يعرض ملفات Markdown
+لأي زائر بلا تسجيل دخول، فيفتحها مراجع Apple مباشرة. **لا حاجة لانتظار GitHub Pages.**
+
+> إن فعّلت Pages لاحقاً فستحصل على نسخ أجمل على
+> `https://alsaidsaid.github.io/salat/privacy.html` — تحسين اختياري، وليس شرطاً للنشر.
+>
+> على أي حال: افتح رابط سياسة الخصوصية في نافذة تصفّح خفي قبل التقديم. رابط لا يفتح = رفض فوري.
 
 ---
 
